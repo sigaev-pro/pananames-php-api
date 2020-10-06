@@ -18,6 +18,22 @@ abstract class ApiClient
 {
 	const HEADER_ACCEPT = 'application/json';
 	const HEADER_CONTENT_TYPE = 'application/json';
+	const API_URL = 'http://api.pananames.com/merchant/v2';
+	const SANDBOX_API_URL = 'http://api.pananames-dev.com/merchant/v2';
+
+	protected $settings;
+
+	public function __construct($signature, $sandbox = true, $debug = false, $proxy = null)
+	{
+		if (empty($signature)) {
+			throw new \InvalidArgumentException('Signature was not provided or was invalid.');
+		}
+
+		$this->settings['signature'] = $signature;
+		$this->settings['sandbox'] = $sandbox;
+		$this->settings['debug'] = $debug;
+		$this->settings['proxy'] = $proxy;
+	}
 
 	public function sendRequest($method, $path, $data, $settings, $returnType = null)
 	{
@@ -27,7 +43,7 @@ abstract class ApiClient
 			'Content-type' => self::HEADER_CONTENT_TYPE
 		];
 
-		$settings['url'] = rtrim($settings['url'], '/');
+		$settings['url'] = $settings['sandbox'] ?  self::SANDBOX_API_URL : self::API_URL;
 		$data = ObjectSerializer::sanitizeForSerialization($data);
 
 		switch ($method) {
@@ -39,6 +55,12 @@ abstract class ApiClient
 				$query['body'] = empty($data) ? '' : json_encode($data);
 				break;
 		}
+
+		$clientConfig = [];
+
+		if(!is_null($settings['proxy'])) {
+            $clientConfig['proxy'] = $settings['proxy'];
+        }
 
 		$client = new Client();
 

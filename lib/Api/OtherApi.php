@@ -1,4 +1,5 @@
 <?php
+
 /**
  * OtherApi
  *
@@ -10,34 +11,18 @@ namespace Pananames\Api;
 
 class OtherApi extends ApiClient
 {
-	private $settings;
-
-	public function __construct($signature, $url)
-	{
-		if (empty($signature)) {
-			throw new \InvalidArgumentException('Signature was not provided or was invalid.');
-		}
-
-		if (empty($url)) {
-			throw new \InvalidArgumentException('Url was not provided or was invalid.');
-		}
-
-		$this->settings['url'] = $url;
-		$this->settings['signature'] = $signature;
-	}
-
-  /**
-   * Function getEmails
-   *
-   * Get account related emails.
-   *
-   * @param int $current_page Current page number (default: 1). (optional, default to 1)
-   * @param int $per_page Count of items per page (default: 30, maximum: 100). (optional, default to 30)
-   * @param string $email_like Filter for email. (optional)
-   * @param string $status Domain status. (optional)
-   * @param string $email_status Email status. (optional)
-   * @return \Pananames\Model\EmailsListResponse
-   */
+	/**
+	 * Function getEmails
+	 *
+	 * Get account related emails.
+	 *
+	 * @param int $current_page Current page number (default: 1). (optional, default to 1)
+	 * @param int $per_page Count of items per page (default: 30, maximum: 100). (optional, default to 30)
+	 * @param string $email_like Filter for email. (optional)
+	 * @param string $status Domain status. (optional)
+	 * @param string $email_status Email status. (optional)
+	 * @return \Pananames\Model\EmailsListResponse
+	 */
 	public function getEmails($current_page = '1', $per_page = '30', $email_like = null, $status = null, $email_status = null)
 	{
 		$url = '/emails';
@@ -62,13 +47,13 @@ class OtherApi extends ApiClient
 		return $this->sendRequest('GET', $url, $data, $this->settings, $returnType);
 	}
 
-  /**
-   * Function getTlds
-   *
-   * Get full list of available TLDs.
-   *
-   * @return \Pananames\Model\TldsListResponse
-   */
+	/**
+	 * Function getTlds
+	 *
+	 * Get full list of available TLDs.
+	 *
+	 * @return \Pananames\Model\TldsListResponse
+	 */
 	public function getTlds()
 	{
 		$url = '/tlds';
@@ -77,5 +62,4 @@ class OtherApi extends ApiClient
 
 		return $this->sendRequest('GET', $url, [], $this->settings, $returnType);
 	}
-
 }
